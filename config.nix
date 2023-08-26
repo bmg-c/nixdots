@@ -1,14 +1,19 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running `nixos-help`).
+{ config, pkgs, host, ... }:
 
-{ config, pkgs, ... }:
+let
+  fileImports = if host.name == "zeus" then
+    [ ./hwconf/hwconf-zeus.nix ] ++ ( import ./modules/config-default.nix)
+    else
+    [ ./hwconf/hwconf-hades.nix ] ++ (import ./modules/config-default.nix);
 
-{
-  imports =
-    [
-      ./hardware-configuration.nix
-    ];
+
+  hardwareNvidia = if host.name == "zeus" then {} else {
+    modesetting.enable = true;
+    open = false;
+  };
+  servicesXserverVideoDrivers = if host.name == "zeus" then [] else [ "nvidia" ];
+in {
+  imports = fileImports;
   nixpkgs.config.allowUnfree = true;
   nix = {
     settings = {
@@ -54,9 +59,7 @@
   };
   time.timeZone = "Asia/Tomsk";
   i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    keyMap = "dvorak";
-  };
+  console.keyMap = "dvorak";
 
 
   hardware = {
@@ -65,14 +68,11 @@
       driSupport = true;
       driSupport32Bit = true;
     };
-    # nvidia = {
-    #   modesetting.enable = true;
-    #   open = false;
-    # };
+    nvidia = hardwareNvidia;
   };
   services.xserver = {
     enable = false;
-    # videoDrivers = ["nvidia"];
+    videoDrivers = servicesXserverVideoDrivers;
     displayManager.lightdm.enable = false;
   };
 
@@ -88,33 +88,18 @@
   };
 
 
-  programs = {
-    hyprland = {
-      enable = true;
-      xwayland.enable = true;
-      # enableNvidiaPatches = true;
-    };
-    fish = {
-      enable = true;
-    };
-  };
-
-
   users = {
-    defaultUserShell = pkgs.fish;
-    users.ivan = {
+    # defaultUserShell = pkgs.fish;
+    users.${host.user} = {
       isNormalUser = true;
-      useDefaultShell = true;
+      # useDefaultShell = true;
       extraGroups = [ "wheel" "video" "audio" "input" "networkmanager" ];
-      packages = with pkgs; [];
     };
   };
-
 
   environment.systemPackages = with pkgs; [
     wofi
     brave
-    kitty
     pavucontrol
     telegram-desktop
     github-desktop
@@ -124,12 +109,19 @@
     neovim
     wget
     git
-
-    # greetd.greetd
-    # greetd.tuigreet
+    wl-clipboard
+    xdg-utils
 
     xorg.xorgserver
     xorg.xf86inputlibinput
+  ];
+
+
+  fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [
+      "FiraCode"
+      "JetBrainsMono"
+    ]; })
   ];
 
 

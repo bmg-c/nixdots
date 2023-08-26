@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "NixOS configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -22,14 +22,26 @@
       nixosConfigurations = {
         zeus = lib.nixosSystem {
           inherit system;
+          specialArgs = {
+            host = {
+              name = "zeus";
+              user = "ivan";
+            };
+          };
           modules = [
-            ./hosts/zeus/configuration.nix
+            ./config.nix
             home-manager.nixosModules.home-manager {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                host = {
+                  name = "zeus";
+                  user = "ivan";
+                };
+              };
               home-manager.users.ivan = {
                 imports = [
-                  ./home/zeus/home.nix
+                  ./home.nix
                 ];
               };
             }
