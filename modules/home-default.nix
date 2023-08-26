@@ -4,5 +4,4 @@
   ./shell/home.nix
   ./misc/home.nix
   ./editor/home.nix
-  ./system/home.nix
 ]
