@@ -3,4 +3,5 @@
   ./terminal/home.nix
   ./shell/home.nix
   ./misc/home.nix
+  ./editor/home.nix
 ]

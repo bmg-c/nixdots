@@ -2,7 +2,22 @@
 
 { pkgs, ... }:
 
-{
+let
+  pfetch.package = pkgs.stdenv.mkDerivation rec {
+    name = "pfetch";
+    src = pkgs.fetchFromGitHub {
+      owner = "andreasgrafen";
+      repo = "pfetch-with-kitties";
+      rev = "f70c7d1a4b977efb1051b4ba1fd553d4d6708dba";
+      sha256 = "1s4ypIemW750a4y0sIeI2JgX3tJP+sblDjFl/CWO4ps=";
+    };
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp pfetch $out/bin/pfetch
+    '';
+  };
+in {
   programs.fish = {
     enable = true;
     plugins = [];
@@ -10,20 +25,18 @@
       starship init fish | source
       fish_config theme choose "Catppuccin Mocha" 
     '';
+    shellAbbrs = {
+      clear = ''clear && printf "\e[31m●\e[0m \e[33m●\e[0m \e[32m●\e[0m \e[36m●\e[0m \e[34m●\e[0m \e[35m●\e[0m \n\n\n" && PF_INFO="ascii title os uptime pkgs" PF_SEP="       " PF_COL1=4 PF_COL2=9 PF_COL3=1 PF_ALIGN="" PF_ASCII="Catppuccin" ${pfetch.package}/bin/pfetch'';
+      c = ''clear && printf "\e[31m●\e[0m \e[33m●\e[0m \e[32m●\e[0m \e[36m●\e[0m \e[34m●\e[0m \e[35m●\e[0m \n\n\n" && PF_INFO="ascii title os uptime pkgs" PF_SEP="       " PF_COL1=4 PF_COL2=9 PF_COL3=1 PF_ALIGN="" PF_ASCII="Catppuccin" ${pfetch.package}/bin/pfetch'';
+    };
     functions = {
       fish_greeting = {
-        description = "Greeting to show when starting a fish shell";
-        body = "
-          ${pkgs.nitch}/bin/nitch
-        ";
+        description = "Greeting";
+        body = ''printf "\e[31m●\e[0m \e[33m●\e[0m \e[32m●\e[0m \e[36m●\e[0m \e[34m●\e[0m \e[35m●\e[0m \n\n\n" && PF_INFO="ascii title os uptime pkgs" PF_SEP="       " PF_COL1=4 PF_COL2=9 PF_COL3=1 PF_ALIGN="" PF_ASCII="Catppuccin" ${pfetch.package}/bin/pfetch'';
       };
     };
   };
   home.file.".config/fish/themes/Catppuccin Mocha.theme".text = ''
-# name: 'Catppuccin mocha'
-# url: 'https://github.com/catppuccin/fish'
-# preferred_background: 1e1e2e
-
 fish_color_normal cdd6f4
 fish_color_command 89b4fa
 fish_color_param f2cdcd

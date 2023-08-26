@@ -1,10 +1,16 @@
-# GNOME keyring
+# htop
 
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
-  # services.gnome-keyring.enable = true;
-  # home.packages = [ pkgs.gnome.gnome-keyring ];
-
-  programs.htop.enable = true;
+  programs.htop = {
+    enable = true;
+    settings = {
+      fields = with config.lib.htop.fields; [
+        PERCENT_CPU
+        PERCENT_MEM
+        COMM
+      ];
+    };
+  };
 }

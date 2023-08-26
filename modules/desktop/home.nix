@@ -24,8 +24,10 @@ in {
 source=~/.config/hypr/mocha.conf
 monitor=,preferred,auto,auto
 
-exec-once = ${pkgs.libsForQt5.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1
+# exec-once = ${pkgs.libsForQt5.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1
+exec-once = ${pkgs.systemd}/bin/systemctl --user start polkitkde.service
 exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
+# exec-once = ${pkgs.hyprpaper} = 
 
 ${envVariables}
 
