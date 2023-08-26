@@ -135,8 +135,6 @@ in {
     github-desktop
     youtube-music
     
-    vim
-    neovim
     wget
     git
     wl-clipboard
