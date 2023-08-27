@@ -67,7 +67,10 @@ in {
   systemd.services.dvorak = dvorak.service;
   systemd.user.services.kwallet = kwallet.service;
   systemd.user.services.polkitkde = polkitkde.service;
+
   
+  programs.dconf.enable = true;
+
 
   environment.systemPackages = [
     dvorak.package

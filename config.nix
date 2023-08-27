@@ -115,10 +115,8 @@ in {
 
 
   users = {
-    # defaultUserShell = pkgs.fish;
     users.${host.user} = {
       isNormalUser = true;
-      # useDefaultShell = true;
       extraGroups = [ "wheel" "video" "audio" "input" "networkmanager" ];
     };
   };
