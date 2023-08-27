@@ -69,10 +69,6 @@ in {
       };
     };
   };
-  environment.etc."greetd/environments".text = ''
-    Hyprland
-    fish
-  '';
 
 
   networking = {
@@ -104,7 +100,6 @@ in {
     enable = false;
     libinput.enable = true;
     videoDrivers = servicesXserverVideoDrivers;
-    displayManager.lightdm.enable = false;
   };
 
 
@@ -140,9 +135,6 @@ in {
     git
     wl-clipboard
     xdg-utils
-
-    xorg.xorgserver
-    xorg.xf86inputlibinput
   ];
 
 

@@ -1,4 +1,5 @@
-# QWERTY shortcuts for dvorak layout, kwallet
+# QWERTY shortcuts for dvorak layout, kwallet, kde polkit agent, pfetch with
+# kitties, gtk theming (dconf), greetd (tuigreet)
 
 { pkgs, host, ... }:
 
@@ -72,6 +73,17 @@ in {
 
   
   programs.dconf.enable = true;
+
+
+  services.xserver.displayManager.lightdm.enable = false;
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd Hyprland";
+      };
+    };
+  };
 
 
   environment.systemPackages = [
