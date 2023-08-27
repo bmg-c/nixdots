@@ -69,6 +69,10 @@ in {
       };
     };
   };
+  environment.etc."greetd/environments".text = ''
+    Hyprland
+    fish
+  '';
 
 
   networking = {
@@ -98,6 +102,7 @@ in {
   };
   services.xserver = {
     enable = false;
+    libinput.enable = true;
     videoDrivers = servicesXserverVideoDrivers;
     displayManager.lightdm.enable = false;
   };
@@ -114,11 +119,9 @@ in {
   };
 
 
-  users = {
-    users.${host.user} = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "video" "audio" "input" "networkmanager" ];
-    };
+  users.users.${host.user} = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "video" "audio" "input" "networkmanager" ];
   };
 
 
