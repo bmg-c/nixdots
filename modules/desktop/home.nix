@@ -16,8 +16,11 @@ env = __GLX_VENDOR_LIBRARY_NAME,nvidia
 env = WLR_NO_HARDWARE_CURSORS,1
   '';  
   colorSchemePath = ".config/hypr/mocha.conf";
+  swww-change = pkgs.writeShellScriptBin "swww-change" ./swww-change;
+  #   echo "hello world" > output.txt
+  # '';
 in {
-  home.packages = with pkgs; [ swww ];
+  home.packages = with pkgs; [ swww swww-change ];
   home.file.".config/hypr/wallpapers/" = {
     source = ./wallpapers;
     recursive = true;
@@ -32,6 +35,7 @@ monitor=,preferred,auto,auto
 
 exec-once = ${pkgs.systemd}/bin/systemctl --user start polkitkde.service
 exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
+exec-once = ${pkgs.swww}/bin/swww init
 
 ${envVariables}
 
