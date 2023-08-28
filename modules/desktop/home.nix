@@ -15,14 +15,19 @@ env = GBM_BACKEND,nvidia-drm
 env = __GLX_VENDOR_LIBRARY_NAME,nvidia
 env = WLR_NO_HARDWARE_CURSORS,1
   '';  
+  colorSchemePath = ".config/hypr/mocha.conf";
 in {
-  # home.packages = with pkgs; [ swww swaybg ];
+  home.packages = with pkgs; [ swww ];
+  home.file.".config/hypr/wallpapers/" = {
+    source = ./wallpapers;
+    recursive = true;
+  };
   wayland.windowManager.hyprland = {
       enable = true;
       xwayland.enable = true;
       enableNvidiaPatches = isNvidiaCard;
       extraConfig = ''
-source=~/.config/hypr/mocha.conf
+source=~/${colorSchemePath}
 monitor=,preferred,auto,auto
 
 exec-once = ${pkgs.systemd}/bin/systemctl --user start polkitkde.service
@@ -181,7 +186,7 @@ bindm = $mainMod, mouse:273, resizewindow
       '';
   };
 
-  home.file.".config/hypr/mocha.conf".text = ''
+  home.file.${colorSchemePath}.text = ''
 $rosewaterAlpha = f5e0dc
 $flamingoAlpha  = f2cdcd
 $pinkAlpha      = f5c2e7
