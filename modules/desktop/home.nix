@@ -15,12 +15,55 @@ env = GBM_BACKEND,nvidia-drm
 env = __GLX_VENDOR_LIBRARY_NAME,nvidia
 env = WLR_NO_HARDWARE_CURSORS,1
   '';  
+
+
   colorSchemePath = ".config/hypr/mocha.conf";
-  swww-change = pkgs.writeShellScriptBin "swww-change" ./swww-change;
-  #   echo "hello world" > output.txt
-  # '';
+
+
+  swww-change = pkgs.writeShellScriptBin "swww-change" ''
+#!/bin/sh
+re="^[0-9]+$"
+
+SOURCE_FOLDER=/home/${host.user}/.config/hypr
+STATE_FILE=$SOURCE_FOLDER/.wallpaper_state
+WALLPAPER_FOLDER=$SOURCE_FOLDER/wallpapers
+WALLPAPER_AMOUNT=$(ls -1q $WALLPAPER_FOLDER | wc -l)
+
+# Sanity checks
+if ! [[ -d "$SOURCE_FOLDER" ]]; then
+    echo "Source folder doesn't exist."
+    exit 1
+fi
+if ! [[ -d "$WALLPAPER_FOLDER" ]]; then
+    echo "Wallpaper folder doesn't exist."
+    exit 1
+fi
+if [ $WALLPAPER_AMOUNT -lt 1 ]; then
+    echo "There aren't any wallpapers in the wallpapers folder."
+    exit 1
+fi
+
+# Defining wallpaper
+if [ -f "$STATE_FILE" ]; then
+    NUMBER=$(cat $STATE_FILE)
+    if ! [[ $NUMBER =~ $re ]] ; then
+        NUMBER=$((1 + $RANDOM % $WALLPAPER_AMOUNT))
+    else 
+        NUMBER=$(($NUMBER + 1))
+        if [ $WALLPAPER_AMOUNT -lt $NUMBER ]; then
+            NUMBER=1
+        fi
+    fi
+else
+    NUMBER=$((1 + $RANDOM % $WALLPAPER_AMOUNT))
+fi
+
+# echo "$(cat $STATE_FILE) -> $NUMBER"
+echo $NUMBER > $STATE_FILE
+${pkgs.swww}/bin/swww img --transition-step 4 --transition-fps 60 --transition-type any "$WALLPAPER_FOLDER/$(ls $WALLPAPER_FOLDER | head -$NUMBER | tail -1)"
+  '';
 in {
-  home.packages = with pkgs; [ swww swww-change ];
+  # home.packages = with pkgs; [ swww ];
   home.file.".config/hypr/wallpapers/" = {
     source = ./wallpapers;
     recursive = true;
@@ -35,7 +78,8 @@ monitor=,preferred,auto,auto
 
 exec-once = ${pkgs.systemd}/bin/systemctl --user start polkitkde.service
 exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
-exec-once = ${pkgs.swww}/bin/swww init
+exec-once = ${pkgs.swww}/bin/swww-daemon
+exec-once = sleep 0.2 && ${swww-change}/bin/swww-change
 
 ${envVariables}
 
@@ -149,6 +193,7 @@ bind = $mainMod, P, exec, ${pkgs.wofi}/bin/wofi --show drun
 bind = $mainMod, R, pseudo, # dwindle
 bind = $mainMod, J, togglesplit, # dwindle
 bind = $mainMod SHIFT, F, fullscreen
+bind = $mainMod, F11, exec, ${swww-change}/bin/swww-change
 
 # Move focus with mainMod + arrow keys
 bind = $mainMod, left, movefocus, l
