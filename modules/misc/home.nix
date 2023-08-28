@@ -1,4 +1,4 @@
-# htop
+# htop, gtk theme, mpv
 
 { config, pkgs, ... }:
 
@@ -27,4 +27,7 @@
       };
     };
   };  
+
+
+  programs.mpv.enable = true;
 }

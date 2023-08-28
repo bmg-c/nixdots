@@ -20,14 +20,18 @@ let
 in {
   programs.fish = {
     enable = true;
-    plugins = [];
     shellInit = ''
       starship init fish | source
       fish_config theme choose "Catppuccin Mocha" 
     '';
     shellAbbrs = {
+      rm = ''rm -vrf'';
+      cp = ''cp -vr'';
+    };
+    shellAliases = {
       clear = ''clear && printf "\e[31m●\e[0m \e[33m●\e[0m \e[32m●\e[0m \e[36m●\e[0m \e[34m●\e[0m \e[35m●\e[0m \n\n\n" && PF_INFO="ascii title os uptime pkgs" PF_SEP="       " PF_COL1=4 PF_COL2=9 PF_COL3=1 PF_ALIGN="" PF_ASCII="Catppuccin" ${pfetch.package}/bin/pfetch'';
-      c = ''clear && printf "\e[31m●\e[0m \e[33m●\e[0m \e[32m●\e[0m \e[36m●\e[0m \e[34m●\e[0m \e[35m●\e[0m \n\n\n" && PF_INFO="ascii title os uptime pkgs" PF_SEP="       " PF_COL1=4 PF_COL2=9 PF_COL3=1 PF_ALIGN="" PF_ASCII="Catppuccin" ${pfetch.package}/bin/pfetch'';
+      c = ''clear'';
+      t = ''tldr'';
     };
     functions = {
       fish_greeting = {

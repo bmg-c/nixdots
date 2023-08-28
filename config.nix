@@ -128,6 +128,7 @@ in {
     git
     wl-clipboard
     xdg-utils
+    tldr
   ];
 
 
