@@ -16,6 +16,7 @@ env = __GLX_VENDOR_LIBRARY_NAME,nvidia
 env = WLR_NO_HARDWARE_CURSORS,1
   '';  
 in {
+  home.packages = with pkgs; [ swww swaybg ];
   wayland.windowManager.hyprland = {
       enable = true;
       xwayland.enable = true;
@@ -24,33 +25,24 @@ in {
 source=~/.config/hypr/mocha.conf
 monitor=,preferred,auto,auto
 
-# exec-once = ${pkgs.libsForQt5.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1
 exec-once = ${pkgs.systemd}/bin/systemctl --user start polkitkde.service
 exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
-# exec-once = ${pkgs.hyprpaper} = 
 
 ${envVariables}
 
-xwayland {
-    force_zero_scaling = true
-}
+xwayland:force_zero_scaling = true
 
-# For all categories, see https://wiki.hyprland.org/Configuring/Variables/
 input {
     kb_layout = us,ru
     kb_variant = dvorak,
     kb_options = grp:caps_toggle
-
     repeat_rate = 38
     repeat_delay = 340
-
     follow_mouse = 1
-
     touchpad {
         natural_scroll = no
     }
-
-    sensitivity = -0.5 # -1.0 - 1.0, 0 means no modification.
+    sensitivity = -0.5
     force_no_accel = 1
 }
 

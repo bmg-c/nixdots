@@ -50,6 +50,7 @@ in {
     };
   };
 
+
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
     initrd.kernelModules = bootInitrdKernelModules;
@@ -59,14 +60,6 @@ in {
       systemd-boot.configurationLimit = 10;
       systemd-boot.consoleMode = "max";
       timeout = 2;
-    };
-  };
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd Hyprland";
-      };
     };
   };
 
