@@ -117,7 +117,6 @@ in {
 
 
   environment.systemPackages = with pkgs; [
-    wofi
     brave
     pavucontrol
     telegram-desktop

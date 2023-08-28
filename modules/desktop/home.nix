@@ -3,23 +3,6 @@
 { pkgs, host, ...}:
 
 let
-  isNvidiaCard = if host.name == "zeus" then false else true;
-  envVariables = if host.name == "zeus" then ''
-env = XCURSOR_SIZE,24
-env = WLR_NO_HARDWARE_CURSORS,1
-  '' else ''
-env = XCURSOR_SIZE,24
-env = LIBVA_DRIVER_NAME,nvidia
-env = XDG_SESSION_TYPE,wayland
-env = GBM_BACKEND,nvidia-drm
-env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-env = WLR_NO_HARDWARE_CURSORS,1
-  '';  
-
-
-  colorSchemePath = ".config/hypr/mocha.conf";
-
-
   swww-change = pkgs.writeShellScriptBin "swww-change" ''
 #!/bin/sh
 re="^[0-9]+$"
@@ -62,8 +45,68 @@ fi
 echo $NUMBER > $STATE_FILE
 ${pkgs.swww}/bin/swww img --transition-step 4 --transition-fps 60 --transition-type any "$WALLPAPER_FOLDER/$(ls $WALLPAPER_FOLDER | head -$NUMBER | tail -1)"
   '';
+
+
+  colorSchemePath = ".config/hypr/mocha.conf";
+
+
+  isNvidiaCard = if host.name == "zeus" then false else true;
+
+
+  envVariables = if host.name == "zeus" then ''
+env = XCURSOR_SIZE,24
+env = WLR_NO_HARDWARE_CURSORS,1
+  '' else ''
+env = XCURSOR_SIZE,24
+env = LIBVA_DRIVER_NAME,nvidia
+env = XDG_SESSION_TYPE,wayland
+env = GBM_BACKEND,nvidia-drm
+env = __GLX_VENDOR_LIBRARY_NAME,nvidia
+env = WLR_NO_HARDWARE_CURSORS,1
+  '';  
+
+
+  gestures = if host.name == "zeus" then ''
+gestures {
+    workspace_swipe = true
+    workspace_swipe_invert = false
+}
+  '' else '''';
+
+
+  input = if host.name == "zeus" then ''
+input {
+    kb_layout = us,ru
+    kb_variant = dvorak,
+    kb_options = grp:caps_toggle
+    repeat_rate = 38
+    repeat_delay = 340
+    follow_mouse = 1
+    touchpad {
+        natural_scroll = false
+        tap_button_map = lmr
+        # drag_lock = true
+        # tap-and-drag = true
+    }
+    sensitivity = 0
+    force_no_accel = false
+}
+  '' else ''
+input {
+    kb_layout = us,ru
+    kb_variant = dvorak,
+    kb_options = grp:caps_toggle
+    repeat_rate = 38
+    repeat_delay = 340
+    follow_mouse = 1
+    touchpad {
+        natural_scroll = no
+    }
+    sensitivity = -0.5
+    force_no_accel = 1
+}
+  '';
 in {
-  # home.packages = with pkgs; [ swww ];
   home.file.".config/hypr/wallpapers/" = {
     source = ./wallpapers;
     recursive = true;
@@ -87,19 +130,7 @@ xwayland {
     force_zero_scaling = true
 }
 
-input {
-    kb_layout = us,ru
-    kb_variant = dvorak,
-    kb_options = grp:caps_toggle
-    repeat_rate = 38
-    repeat_delay = 340
-    follow_mouse = 1
-    touchpad {
-        natural_scroll = no
-    }
-    sensitivity = -0.5
-    force_no_accel = 1
-}
+${input}
 
 general {
     # See https://wiki.hyprland.org/Configuring/Variables/ for more
@@ -163,22 +194,15 @@ master {
     # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more new_is_master = true 
 }
 
-gestures {
-    # See https://wiki.hyprland.org/Configuring/Variables/ for more
-    workspace_swipe = off
+${gestures}
+
+misc {
+    disable_hyprland_logo = true
+    disable_splash_rendering = true
 }
 
-# Example per-device config
-# See https://wiki.hyprland.org/Configuring/Keywords/#executing for more
-device:epic-mouse-v1 {
-    sensitivity = -0.5
-}
 
-# Example windowrule v1
-# windowrule = float, ^(kitty)$
-# Example windowrule v2
-# windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
-# See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+windowrule = workspace 2, ^(brave-browser)$
 
 
 # See https://wiki.hyprland.org/Configuring/Keywords/ for more
@@ -189,7 +213,7 @@ bind = $mainMod SHIFT, Return, exec, ${pkgs.kitty}/bin/kitty
 bind = $mainMod SHIFT, C, killactive, 
 bind = CTRL ALT, Backspace, exit, 
 bind = $mainMod, V, togglefloating, 
-bind = $mainMod, P, exec, ${pkgs.wofi}/bin/wofi --show drun
+bind = $mainMod, P, exec, ${pkgs.kickoff}/bin/kickoff
 bind = $mainMod, R, pseudo, # dwindle
 bind = $mainMod, J, togglesplit, # dwindle
 bind = $mainMod SHIFT, F, fullscreen
@@ -234,6 +258,33 @@ bindm = $mainMod, mouse:272, movewindow
 bindm = $mainMod, mouse:273, resizewindow
       '';
   };
+
+  home.file.".config/kickoff/config.toml".text = ''
+prompt = 'run:  '
+padding = 100
+fonts = [
+    'Fira Code',
+]
+font_size = 32.0
+[history]
+decrease_interval = 48
+[colors]
+background = '#1e1e2ec8'
+prompt = '#6c7086ff'
+text = '#cdd6f4ff'
+text_query = '#f38ba8ff'
+text_selected = '#f38ba8ff'
+[keybindings]
+paste = ["ctrl+v"]
+execute = ["KP_Enter", "Return"]
+delete = ["KP_Delete", "Delete", "BackSpace"]
+delete_word = ["ctrl+KP_Delete", "ctrl+Delete", "ctrl+BackSpace"]
+complete = ["Tab"]
+nav_up = ["Up"]
+nav_down = ["Down"]
+exit = ["Escape"]
+
+  '';
 
   home.file.${colorSchemePath}.text = ''
 $rosewaterAlpha = f5e0dc
