@@ -16,7 +16,7 @@ env = __GLX_VENDOR_LIBRARY_NAME,nvidia
 env = WLR_NO_HARDWARE_CURSORS,1
   '';  
 in {
-  home.packages = with pkgs; [ swww swaybg ];
+  # home.packages = with pkgs; [ swww swaybg ];
   wayland.windowManager.hyprland = {
       enable = true;
       xwayland.enable = true;
@@ -30,7 +30,9 @@ exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
 
 ${envVariables}
 
-xwayland:force_zero_scaling = true
+xwayland {
+    force_zero_scaling = true
+}
 
 input {
     kb_layout = us,ru
