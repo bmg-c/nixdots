@@ -3,51 +3,13 @@
 { pkgs, host, ...}:
 
 let
-  swww-change = pkgs.writeShellScriptBin "swww-change" ''
-#!/bin/sh
-re="^[0-9]+$"
-
-SOURCE_FOLDER=/home/${host.user}/.config/hypr
-STATE_FILE=$SOURCE_FOLDER/.wallpaper_state
-WALLPAPER_FOLDER=$SOURCE_FOLDER/wallpapers
-WALLPAPER_AMOUNT=$(ls -1q $WALLPAPER_FOLDER | wc -l)
-
-# Sanity checks
-if ! [[ -d "$SOURCE_FOLDER" ]]; then
-    echo "Source folder doesn't exist."
-    exit 1
-fi
-if ! [[ -d "$WALLPAPER_FOLDER" ]]; then
-    echo "Wallpaper folder doesn't exist."
-    exit 1
-fi
-if [ $WALLPAPER_AMOUNT -lt 1 ]; then
-    echo "There aren't any wallpapers in the wallpapers folder."
-    exit 1
-fi
-
-# Defining wallpaper
-if [ -f "$STATE_FILE" ]; then
-    NUMBER=$(cat $STATE_FILE)
-    if ! [[ $NUMBER =~ $re ]] ; then
-        NUMBER=$((1 + $RANDOM % $WALLPAPER_AMOUNT))
-    else 
-        NUMBER=$(($NUMBER + 1))
-        if [ $WALLPAPER_AMOUNT -lt $NUMBER ]; then
-            NUMBER=1
-        fi
-    fi
-else
-    NUMBER=$((1 + $RANDOM % $WALLPAPER_AMOUNT))
-fi
-
-# echo "$(cat $STATE_FILE) -> $NUMBER"
-echo $NUMBER > $STATE_FILE
-${pkgs.swww}/bin/swww img --transition-step 4 --transition-fps 60 --transition-type any "$WALLPAPER_FOLDER/$(ls $WALLPAPER_FOLDER | head -$NUMBER | tail -1)"
-  '';
+  swww-change = pkgs.writeShellScriptBin "swww-change"
+    builtins.readFile ./swww-change;
 
 
   colorSchemePath = ".config/hypr/mocha.conf";
+  launcherConfigPath = ".config/kickoff/config.toml";
+  wallpapersFolderPath = ".config/hypr/wallpapers/";
 
 
   isNvidiaCard = if host.name == "zeus" then false else true;
@@ -107,7 +69,7 @@ input {
 }
   '';
 in {
-  home.file.".config/hypr/wallpapers/" = {
+  home.file.${wallpapersFolderPath} = {
     source = ./wallpapers;
     recursive = true;
   };
@@ -259,94 +221,9 @@ bindm = $mainMod, mouse:273, resizewindow
       '';
   };
 
-  home.file.".config/kickoff/config.toml".text = ''
-prompt = 'run:  '
-padding = 100
-fonts = [
-    'Fira Code',
-]
-font_size = 32.0
-[history]
-decrease_interval = 48
-[colors]
-background = '#1e1e2ec8'
-prompt = '#6c7086ff'
-text = '#cdd6f4ff'
-text_query = '#f38ba8ff'
-text_selected = '#f38ba8ff'
-[keybindings]
-paste = ["ctrl+v"]
-execute = ["KP_Enter", "Return"]
-delete = ["KP_Delete", "Delete", "BackSpace"]
-delete_word = ["ctrl+KP_Delete", "ctrl+Delete", "ctrl+BackSpace"]
-complete = ["Tab"]
-nav_up = ["Up"]
-nav_down = ["Down"]
-exit = ["Escape"]
+  home.file.${launcherConfigPath}.text =
+    builtins.readFile ./config.toml;
 
-  '';
-
-  home.file.${colorSchemePath}.text = ''
-$rosewaterAlpha = f5e0dc
-$flamingoAlpha  = f2cdcd
-$pinkAlpha      = f5c2e7
-$mauveAlpha     = cba6f7
-$redAlpha       = f38ba8
-$maroonAlpha    = eba0ac
-$peachAlpha     = fab387
-$yellowAlpha    = f9e2af
-$greenAlpha     = a6e3a1
-$tealAlpha      = 94e2d5
-$skyAlpha       = 89dceb
-$sapphireAlpha  = 74c7ec
-$blueAlpha      = 89b4fa
-$lavenderAlpha  = b4befe
-
-$textAlpha      = cdd6f4
-$subtext1Alpha  = bac2de
-$subtext0Alpha  = a6adc8
-
-$overlay2Alpha  = 9399b2
-$overlay1Alpha  = 7f849c
-$overlay0Alpha  = 6c7086
-
-$surface2Alpha  = 585b70
-$surface1Alpha  = 45475a
-$surface0Alpha  = 313244
-
-$baseAlpha      = 1e1e2e
-$mantleAlpha    = 181825
-$crustAlpha     = 11111b
-
-$rosewater = 0xfff5e0dc
-$flamingo  = 0xfff2cdcd
-$pink      = 0xfff5c2e7
-$mauve     = 0xffcba6f7
-$red       = 0xfff38ba8
-$maroon    = 0xffeba0ac
-$peach     = 0xfffab387
-$yellow    = 0xfff9e2af
-$green     = 0xffa6e3a1
-$teal      = 0xff94e2d5
-$sky       = 0xff89dceb
-$sapphire  = 0xff74c7ec
-$blue      = 0xff89b4fa
-$lavender  = 0xffb4befe
-
-$text      = 0xffcdd6f4
-$subtext1  = 0xffbac2de
-$subtext0  = 0xffa6adc8
-
-$overlay2  = 0xff9399b2
-$overlay1  = 0xff7f849c
-$overlay0  = 0xff6c7086
-
-$surface2  = 0xff585b70
-$surface1  = 0xff45475a
-$surface0  = 0xff313244
-
-$base      = 0xff1e1e2e
-$mantle    = 0xff181825
-$crust     = 0xff11111b
-  '';
+  home.file.${colorSchemePath}.text =
+    builtins.readFile ./mocha.conf;
 }
