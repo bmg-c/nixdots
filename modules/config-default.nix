@@ -4,4 +4,5 @@
   ./shell/config.nix
   ./misc/config.nix
   ./editor/config.nix
+  ./bar/config.nix
 ]

@@ -9,14 +9,15 @@
       name = "FiraCode";
     };
     settings = {
-      # resize_in_steps = "yes";
       window_padding_width = 10;
+      confirm_os_window_close = 2;
+      enable_audio_bell = false;
       # tab_bar_min_tabs = 1;
       # tab_bar_edge = "bottom";
       # tab_bar_style = "powerline";
       # tab_powerline_style = "slanted";
       # tab_title_template = "{title}{' :{}:'.format(num_windows) if num_windows > 1 else ''}";
-      enable_audio_bell = false;
+      # # Cattpuccin colors
       foreground = "#CDD6F4";
       background = "#1E1E2E";
       selection_foreground = "#1E1E2E";

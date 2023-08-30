@@ -55,19 +55,6 @@ ${pkgs.swww}/bin/swww img --transition-step 4 --transition-fps 60 --transition-t
   isNvidiaCard = if host.name == "zeus" then false else true;
 
 
-  envVariables = if host.name == "zeus" then ''
-env = XCURSOR_SIZE,24
-env = WLR_NO_HARDWARE_CURSORS,1
-  '' else ''
-env = XCURSOR_SIZE,24
-env = LIBVA_DRIVER_NAME,nvidia
-env = XDG_SESSION_TYPE,wayland
-env = GBM_BACKEND,nvidia-drm
-env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-env = WLR_NO_HARDWARE_CURSORS,1
-  '';  
-
-
   gestures = if host.name == "zeus" then ''
 gestures {
     workspace_swipe = true
@@ -126,18 +113,26 @@ exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
 exec-once = ${pkgs.swww}/bin/swww-daemon
 exec-once = sleep 0.2 && ${swww-change}/bin/swww-change
 
-${envVariables}
+# Wayland/Hyprland environment varibles
+env = XDG_CURRENT_DESKTOP,Hyprland
+env = XDG_SESSION_TYPE,wayland
+env = XDG_SESSION_DESKTOP,Hyprland
+env = QT_AUTO_SCREEN_SCALE_FACTOR,1
+env = QT_QPA_PLATFORM,wayland;xcb
+env = GDK_BACKEND,wayland,x11
+env = SDL_VIDEODRIVER,wayland
+env = CLUTTER_BACKEND,wayland
 
 xwayland {
     force_zero_scaling = true
+    use_nearest_neighbor = false
 }
 
 ${input}
 
+${gestures}
+
 general {
-    # See https://wiki.hyprland.org/Configuring/Variables/ for more
-
-
     border_size = 3
     gaps_in = 5
     gaps_out = 20
@@ -158,37 +153,34 @@ decoration {
     # See https://wiki.hyprland.org/Configuring/Variables/ for more
 
     rounding = 10
-
     blur {
         enabled = true
         size = 3
         passes = 1
     }
 
-    drop_shadow = yes
-    shadow_range = 4
-    shadow_render_power = 3
-    col.shadow = rgba(1a1a1aee)
+    drop_shadow = false
+    # shadow_range = 4
+    # shadow_render_power = 3
+    # col.shadow = $surface0
+    # col.shadow_inactive = $surface0
 }
 
 animations {
     enabled = yes
 
-    # Some default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
+    bezier = windowsBezier, 0.16, 1, 0.3, 1
+    bezier = workspacesBezier, 0.85, 0, 0.15, 1
 
-    bezier = myBezier, 0.05, 0.9, 0.1, 1.05
-
-    animation = windows, 1, 7, myBezier
-    animation = windowsOut, 1, 7, default, popin 80%
+    animation = windows, 1, 4, windowsBezier, slide
     animation = border, 1, 10, default
     animation = borderangle, 1, 8, default
-    animation = fade, 1, 7, default
-    animation = workspaces, 1, 6, default
+    animation = fade, 1, 3, default
+    animation = workspaces, 1, 3, workspacesBezier, slide
 }
 
 dwindle {
-    # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
-    pseudotile = yes # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+    pseudotile = yes
     preserve_split = yes # you probably want this
 }
 
@@ -196,38 +188,32 @@ master {
     # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more new_is_master = true 
 }
 
-${gestures}
-
 misc {
     disable_hyprland_logo = true
     disable_splash_rendering = true
 }
 
+windowrule = workspace 2 silent, ^(brave-browser)$
+windowrule = workspace 5 silent, ^(org.telegram.desktop)$
 
-windowrule = workspace 2, ^(brave-browser)$
 
-
-# See https://wiki.hyprland.org/Configuring/Keywords/ for more
 $mainMod = SUPER
 
-# Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-bind = $mainMod SHIFT, Return, exec, ${pkgs.kitty}/bin/kitty
-bind = $mainMod SHIFT, C, killactive, 
-bind = CTRL ALT, Backspace, exit, 
 bind = $mainMod, V, togglefloating, 
-bind = $mainMod, P, exec, ${pkgs.kickoff}/bin/kickoff
-bind = $mainMod, R, pseudo, # dwindle
-bind = $mainMod, J, togglesplit, # dwindle
-bind = $mainMod SHIFT, F, fullscreen
+bind = $mainMod, R, pseudo
+bind = $mainMod, I, togglesplit,
+
+bind = $mainMod, J, cyclenext,
+binde = $mainMod, H, resizeactive, -20 0
+binde = $mainMod, L, resizeactive, 20 0
+
 bind = $mainMod, F11, exec, ${swww-change}/bin/swww-change
 
-# Move focus with mainMod + arrow keys
-bind = $mainMod, left, movefocus, l
-bind = $mainMod, right, movefocus, r
-bind = $mainMod, up, movefocus, u
-bind = $mainMod, down, movefocus, d
-
-# Switch workspaces with mainMod + [0-9]
+bind = $mainMod SHIFT, Return, exec, ${pkgs.kitty}/bin/kitty
+bind = $mainMod, P, exec, ${pkgs.kickoff}/bin/kickoff
+bind = CTRL ALT, Backspace, exit, 
+bind = $mainMod SHIFT, F, fullscreen
+bind = $mainMod SHIFT, C, killactive, 
 bind = $mainMod, 1, workspace, 1
 bind = $mainMod, 2, workspace, 2
 bind = $mainMod, 3, workspace, 3
@@ -238,24 +224,16 @@ bind = $mainMod, 7, workspace, 7
 bind = $mainMod, 8, workspace, 8
 bind = $mainMod, 9, workspace, 9
 bind = $mainMod, 0, workspace, 10
-
-# Move active window to a workspace with mainMod + SHIFT + [0-9]
-bind = $mainMod SHIFT, 1, movetoworkspace, 1
-bind = $mainMod SHIFT, 2, movetoworkspace, 2
-bind = $mainMod SHIFT, 3, movetoworkspace, 3
-bind = $mainMod SHIFT, 4, movetoworkspace, 4
-bind = $mainMod SHIFT, 5, movetoworkspace, 5
-bind = $mainMod SHIFT, 6, movetoworkspace, 6
-bind = $mainMod SHIFT, 7, movetoworkspace, 7
-bind = $mainMod SHIFT, 8, movetoworkspace, 8
-bind = $mainMod SHIFT, 9, movetoworkspace, 9
-bind = $mainMod SHIFT, 0, movetoworkspace, 10
-
-# Scroll through existing workspaces with mainMod + scroll
-bind = $mainMod, mouse_down, workspace, e+1
-bind = $mainMod, mouse_up, workspace, e-1
-
-# Move/resize windows with mainMod + LMB/RMB and dragging
+bind = $mainMod SHIFT, 1, movetoworkspacesilent, 1
+bind = $mainMod SHIFT, 2, movetoworkspacesilent, 2
+bind = $mainMod SHIFT, 3, movetoworkspacesilent, 3
+bind = $mainMod SHIFT, 4, movetoworkspacesilent, 4
+bind = $mainMod SHIFT, 5, movetoworkspacesilent, 5
+bind = $mainMod SHIFT, 6, movetoworkspacesilent, 6
+bind = $mainMod SHIFT, 7, movetoworkspacesilent, 7
+bind = $mainMod SHIFT, 8, movetoworkspacesilent, 8
+bind = $mainMod SHIFT, 9, movetoworkspacesilent, 9
+bind = $mainMod SHIFT, 0, movetoworkspacesilent, 10
 bindm = $mainMod, mouse:272, movewindow
 bindm = $mainMod, mouse:273, resizewindow
       '';
