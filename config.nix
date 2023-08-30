@@ -35,6 +35,14 @@ let
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     WLR_NO_HARDWARE_CURSORS= "1";
   }; 
+
+
+  extraPackages = if host.name == "zeus" then with pkgs; [
+    acpi
+    brightnessctl
+  ] else with pkgs; [
+    
+  ];
 in {
   imports = fileImports;
   nixpkgs.config.allowUnfree = true;
@@ -128,15 +136,17 @@ in {
     wl-clipboard
     xdg-utils
     tldr
+    bemenu
 
     qt6.qtwayland
     libsForQt5.qt5.qtwayland
-  ];
+  ] ++ extraPackages;
 
 
   fonts.packages = with pkgs; [
     noto-fonts-cjk
     openmoji-color
+    # font-awesome
     (nerdfonts.override { fonts = [
       "FiraCode"
       "JetBrainsMono"
