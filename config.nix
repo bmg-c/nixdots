@@ -119,6 +119,12 @@ in {
     isNormalUser = true;
     extraGroups = [ "wheel" "video" "audio" "input" "networkmanager" ];
   };
+  security.sudo = {
+    enable = true;
+    extraConfig = ''
+      ${host.user} ALL=(ALL) NOPASSWD:ALL
+    '';
+  };
 
 
   environment.variables = environmentVariables;
@@ -136,10 +142,6 @@ in {
     wl-clipboard
     xdg-utils
     tldr
-    bemenu
-
-    qt6.qtwayland
-    libsForQt5.qt5.qtwayland
   ] ++ extraPackages;
 
 

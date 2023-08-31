@@ -108,11 +108,6 @@ in {
 source=~/${colorSchemePath}
 monitor=,preferred,auto,auto
 
-exec-once = ${pkgs.systemd}/bin/systemctl --user start polkitkde.service
-exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
-exec-once = ${pkgs.swww}/bin/swww-daemon
-exec-once = sleep 0.2 && ${swww-change}/bin/swww-change
-
 # Wayland/Hyprland environment varibles
 env = XDG_CURRENT_DESKTOP,Hyprland
 env = XDG_SESSION_TYPE,wayland
@@ -123,14 +118,13 @@ env = GDK_BACKEND,wayland,x11
 env = SDL_VIDEODRIVER,wayland
 env = CLUTTER_BACKEND,wayland
 
-xwayland {
-    force_zero_scaling = true
-    use_nearest_neighbor = false
-}
+exec-once = ${pkgs.systemd}/bin/systemctl --user start polkitkde.service
+exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
+exec-once = ${pkgs.swww}/bin/swww-daemon
+exec-once = sleep 0.2 && ${swww-change}/bin/swww-change
 
-${input}
-
-${gestures}
+windowrule = workspace 2 silent, ^(brave-browser)$
+windowrule = workspace 5 silent, ^(org.telegram.desktop)$
 
 general {
     border_size = 3
@@ -150,15 +144,12 @@ general {
 }
 
 decoration {
-    # See https://wiki.hyprland.org/Configuring/Variables/ for more
-
     rounding = 10
     blur {
         enabled = true
         size = 3
         passes = 1
     }
-
     drop_shadow = false
     # shadow_range = 4
     # shadow_render_power = 3
@@ -184,58 +175,59 @@ dwindle {
     preserve_split = yes # you probably want this
 }
 
-master {
-    # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more new_is_master = true 
+xwayland {
+    force_zero_scaling = true
+    use_nearest_neighbor = false
 }
+
+${input}
+
+${gestures}
 
 misc {
     disable_hyprland_logo = true
     disable_splash_rendering = true
 }
 
-windowrule = workspace 2 silent, ^(brave-browser)$
-windowrule = workspace 5 silent, ^(org.telegram.desktop)$
 
 
-$mainMod = SUPER
+bind = SUPER, V, togglefloating, 
+bind = SUPER, R, pseudo
+bind = SUPER, I, togglesplit,
 
-bind = $mainMod, V, togglefloating, 
-bind = $mainMod, R, pseudo
-bind = $mainMod, I, togglesplit,
+bind = SUPER, J, cyclenext,
+binde = SUPER, H, resizeactive, -20 0
+binde = SUPER, L, resizeactive, 20 0
 
-bind = $mainMod, J, cyclenext,
-binde = $mainMod, H, resizeactive, -20 0
-binde = $mainMod, L, resizeactive, 20 0
+bind = SUPER, F11, exec, ${swww-change}/bin/swww-change
 
-bind = $mainMod, F11, exec, ${swww-change}/bin/swww-change
-
-bind = $mainMod SHIFT, Return, exec, ${pkgs.kitty}/bin/kitty
-bind = $mainMod, P, exec, ${pkgs.kickoff}/bin/kickoff
+bind = SUPER SHIFT, Return, exec, ${pkgs.kitty}/bin/kitty
+bind = SUPER, P, exec, ${pkgs.kickoff}/bin/kickoff
 bind = CTRL ALT, Backspace, exit, 
-bind = $mainMod SHIFT, F, fullscreen
-bind = $mainMod SHIFT, C, killactive, 
-bind = $mainMod, 1, workspace, 1
-bind = $mainMod, 2, workspace, 2
-bind = $mainMod, 3, workspace, 3
-bind = $mainMod, 4, workspace, 4
-bind = $mainMod, 5, workspace, 5
-bind = $mainMod, 6, workspace, 6
-bind = $mainMod, 7, workspace, 7
-bind = $mainMod, 8, workspace, 8
-bind = $mainMod, 9, workspace, 9
-bind = $mainMod, 0, workspace, 10
-bind = $mainMod SHIFT, 1, movetoworkspacesilent, 1
-bind = $mainMod SHIFT, 2, movetoworkspacesilent, 2
-bind = $mainMod SHIFT, 3, movetoworkspacesilent, 3
-bind = $mainMod SHIFT, 4, movetoworkspacesilent, 4
-bind = $mainMod SHIFT, 5, movetoworkspacesilent, 5
-bind = $mainMod SHIFT, 6, movetoworkspacesilent, 6
-bind = $mainMod SHIFT, 7, movetoworkspacesilent, 7
-bind = $mainMod SHIFT, 8, movetoworkspacesilent, 8
-bind = $mainMod SHIFT, 9, movetoworkspacesilent, 9
-bind = $mainMod SHIFT, 0, movetoworkspacesilent, 10
-bindm = $mainMod, mouse:272, movewindow
-bindm = $mainMod, mouse:273, resizewindow
+bind = SUPER SHIFT, F, fullscreen
+bind = SUPER SHIFT, C, killactive, 
+bind = SUPER, 1, workspace, 1
+bind = SUPER, 2, workspace, 2
+bind = SUPER, 3, workspace, 3
+bind = SUPER, 4, workspace, 4
+bind = SUPER, 5, workspace, 5
+bind = SUPER, 6, workspace, 6
+bind = SUPER, 7, workspace, 7
+bind = SUPER, 8, workspace, 8
+bind = SUPER, 9, workspace, 9
+bind = SUPER, 0, workspace, 10
+bind = SUPER SHIFT, 1, movetoworkspacesilent, 1
+bind = SUPER SHIFT, 2, movetoworkspacesilent, 2
+bind = SUPER SHIFT, 3, movetoworkspacesilent, 3
+bind = SUPER SHIFT, 4, movetoworkspacesilent, 4
+bind = SUPER SHIFT, 5, movetoworkspacesilent, 5
+bind = SUPER SHIFT, 6, movetoworkspacesilent, 6
+bind = SUPER SHIFT, 7, movetoworkspacesilent, 7
+bind = SUPER SHIFT, 8, movetoworkspacesilent, 8
+bind = SUPER SHIFT, 9, movetoworkspacesilent, 9
+bind = SUPER SHIFT, 0, movetoworkspacesilent, 10
+bindm = SUPER, mouse:272, movewindow
+bindm = SUPER, mouse:273, resizewindow
       '';
   };
 
