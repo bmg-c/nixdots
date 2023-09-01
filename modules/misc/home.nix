@@ -29,7 +29,15 @@
         variant = "mocha";
       };
     };
+    iconTheme = {
+      name = "Paper";
+      package = pkgs.paper-icon-theme;
+    };
   };  
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
+  };
 
 
   programs.mpv.enable = true;

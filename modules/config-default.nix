@@ -5,4 +5,5 @@
   ./misc/config.nix
   ./editor/config.nix
   ./bar/config.nix
+  ./power/config.nix
 ]

@@ -47,12 +47,41 @@ ${pkgs.swww}/bin/swww img --transition-step 4 --transition-fps 60 --transition-t
   '';
 
 
+  kb-variant-toggle = pkgs.writeShellScriptBin "kb-variant-toggle" ''
+#!/bin/sh
+
+SOURCE_FOLDER=/home/${host.user}/.config/hypr
+STATE_FILE=$SOURCE_FOLDER/.kbstate
+
+# Sanity checks
+if ! [[ -d "$SOURCE_FOLDER" ]]; then
+    echo "Source folder doesn't exist."
+    exit 1
+fi
+
+if [ -f "$STATE_FILE" ]; then
+    if [ $(cat $STATE_FILE) = "1" ]; then
+        ${pkgs.hyprland}/bin/hyprctl reload
+        echo "0" > $STATE_FILE
+    else
+        ${pkgs.hyprland}/bin/hyprctl keyword input:kb_variant ""
+        echo "1" > $STATE_FILE
+    fi
+else
+    ${pkgs.hyprland}/bin/hyprctl keyword input:kb_variant ""
+    echo "1" > $STATE_FILE
+fi
+  '';
+
+
   colorSchemePath = ".config/hypr/mocha.conf";
   launcherConfigPath = ".config/kickoff/config.toml";
   wallpapersFolderPath = ".config/hypr/wallpapers/";
 
 
   isNvidiaCard = if host.name == "zeus" then false else true;
+  execOnceCpupowerGui = if host.name == "zeus" then ''exec-once = ${pkgs.cpupower-gui}/bin/cpupower-gui ene --pref power'' else '''';
+  execOnceBrightnessctl = if host.name == "zeus" then ''exec-once = ${pkgs.brightnessctl}/bin/brightnessctl set 180'' else '''';
 
 
   gestures = if host.name == "zeus" then ''
@@ -95,6 +124,12 @@ input {
     force_no_accel = 1
 }
   '';
+
+
+  bindBrightness = if host.name == "zeus" then ''
+binde = SUPER, F5, exec, brightnessctl set 15-
+binde = SUPER, F6, exec, brightnessctl set +15
+'' else '''';
 in {
   home.file.${wallpapersFolderPath} = {
     source = ./wallpapers;
@@ -122,35 +157,33 @@ exec-once = ${pkgs.systemd}/bin/systemctl --user start polkitkde.service
 exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
 exec-once = ${pkgs.swww}/bin/swww-daemon
 exec-once = sleep 0.2 && ${swww-change}/bin/swww-change
+${execOnceCpupowerGui} 
+${execOnceBrightnessctl}
 
 windowrule = workspace 2 silent, ^(brave-browser)$
 windowrule = workspace 5 silent, ^(org.telegram.desktop)$
 windowrule = workspace 4 silent, ^(YouTube Music)$
 windowrule = float, ^(pavucontrol)$
 
+
 general {
     border_size = 3
     gaps_in = 5
     gaps_out = 20
-
     col.active_border=$pink
     col.inactive_border=$surface0
-
     col.group_border_active=$flamingo
     col.group_border=$surface0
-
     cursor_inactive_timeout = 5
     no_cursor_warps = false
-
     layout = dwindle
 }
-
 decoration {
     rounding = 10
     blur {
         enabled = false
-        size = 3
-        passes = 1
+        # size = 3
+        # passes = 1
     }
     drop_shadow = false
     # shadow_range = 4
@@ -158,39 +191,30 @@ decoration {
     # col.shadow = $surface0
     # col.shadow_inactive = $surface0
 }
-
 animations {
     enabled = yes
-
     bezier = windowsBezier, 0.16, 1, 0.3, 1
     bezier = workspacesBezier, 0.85, 0, 0.15, 1
-
     animation = windows, 1, 4, windowsBezier, slide
     animation = border, 1, 10, default
     animation = borderangle, 1, 8, default
     animation = fade, 1, 3, default
     animation = workspaces, 1, 3, workspacesBezier, slide
 }
-
 dwindle {
     pseudotile = yes
     preserve_split = yes # you probably want this
 }
-
 xwayland {
     force_zero_scaling = true
     use_nearest_neighbor = false
 }
-
 ${input}
-
 ${gestures}
-
 misc {
     disable_hyprland_logo = true
     disable_splash_rendering = true
 }
-
 
 
 bind = SUPER, V, togglefloating, 
@@ -202,7 +226,11 @@ binde = SUPER, H, resizeactive, -20 0
 binde = SUPER, L, resizeactive, 20 0
 
 bind = SUPER SHIFT, S, exec, ${pkgs.slurp}/bin/slurp -d | ${pkgs.grim}/bin/grim -g - - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.wl-clipboard}/bin/wl-copy
-bind = SUPER, F11, exec, ${swww-change}/bin/swww-change
+bind = SUPER, F12, exec, ${swww-change}/bin/swww-change
+bind = SUPER, down, exec, ${pkgs.alsa-utils}/bin/amixer sset Master 5%-
+bind = SUPER, up, exec, ${pkgs.alsa-utils}/bin/amixer sset Master 5%+
+${bindBrightness}
+bind = SUPER, F10, exec, ${kb-variant-toggle}/bin/kb-variant-toggle
 
 bind = SUPER SHIFT, Return, exec, ${pkgs.kitty}/bin/kitty
 bind = SUPER, P, exec, ${pkgs.kickoff}/bin/kickoff
