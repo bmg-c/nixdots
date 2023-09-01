@@ -144,6 +144,7 @@ in {
     wl-clipboard
     xdg-utils
     tldr
+    npm
   ] ++ extraPackages;
 
 
