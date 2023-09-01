@@ -85,6 +85,10 @@ in {
     };
   };
 
+  security.pam.services.gtklock.text = ''
+    auth include login
+  '';
+
 
   environment.systemPackages = [
     dvorak.package
@@ -92,4 +96,13 @@ in {
     polkitkde.package
     pfetch.package
   ];
+
+
+  boot = {
+    kernelParams = [ "quiet" "splash" "plymouth.nolog" ];
+    plymouth = {
+      enable = true;
+      
+    };
+  };
 }

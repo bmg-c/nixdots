@@ -6,7 +6,7 @@
   programs.kitty = {
     enable = true;
     font = {
-      name = "FiraCode";
+      name = "FiraCode Nerd Font";
     };
     settings = {
       window_padding_width = 10;

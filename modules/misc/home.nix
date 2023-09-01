@@ -40,7 +40,7 @@
     layout = [
       {
         "label" = "lock";
-        "action" = "swaylock";
+        "action" = "${pkgs.gtklock}/bin/gtklock";
         "text" = "Lock";
         "keybind" = "l";
       }
@@ -84,7 +84,7 @@ window {
 }
 button {
     color: #FFFFFF;
-	background-color: #1E1E1E;
+	background-color: #1E1E2E;
 	border-style: solid;
 	border-width: 2px;
 	background-repeat: no-repeat;
@@ -93,7 +93,7 @@ button {
 }
 
 button:focus, button:active, button:hover {
-	background-color: #3700B3;
+	background-color: #764368;
 	outline-style: none;
 }
 
@@ -125,4 +125,10 @@ button:focus, button:active, button:hover {
   home.file.".config/wlogout/icons/" = {
     source = ./icons;
   };
+
+
+  # services.mako = {
+  #   enable = true;
+  # };
+  # home.packages = with pkgs; [ libnotify ];
 }

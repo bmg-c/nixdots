@@ -265,7 +265,7 @@ in {
           "format" = "{:%I:%M %p  %A %b %d}";
           "tooltip" = true;
           # "tooltip-format"= "{=%A; %d %B %Y}\n<tt>{calendar}</tt>";
-          "tooltip-format" = "NixOS\nUser: ${host.user}@${host.name}\n\n<tt>{calendar}</tt>";
+          "tooltip-format" = "NixOS\nUser: ${host.user}@nixos\nHost: ${host.name}\n\n<tt>{calendar}</tt>";
         };
         # "memory" = {
         #   "interval" = 1;

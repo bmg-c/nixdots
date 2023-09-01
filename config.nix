@@ -24,6 +24,7 @@ let
     VISUAL = "nvim";
     XCURSOR_SIZE = "24";
     WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
     AMD_VULKAN_ICD = "RADV";
   } else {
     EDITOR = "nvim";
@@ -34,6 +35,7 @@ let
     GBM_BACKEND= "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     WLR_NO_HARDWARE_CURSORS= "1";
+    NIXOS_OZONE_WL = "1";
   }; 
 
 

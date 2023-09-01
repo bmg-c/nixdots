@@ -125,6 +125,8 @@ exec-once = sleep 0.2 && ${swww-change}/bin/swww-change
 
 windowrule = workspace 2 silent, ^(brave-browser)$
 windowrule = workspace 5 silent, ^(org.telegram.desktop)$
+windowrule = workspace 4 silent, ^(YouTube Music)$
+windowrule = float, ^(pavucontrol)$
 
 general {
     border_size = 3
@@ -146,7 +148,7 @@ general {
 decoration {
     rounding = 10
     blur {
-        enabled = true
+        enabled = false
         size = 3
         passes = 1
     }
@@ -199,6 +201,7 @@ bind = SUPER, J, cyclenext,
 binde = SUPER, H, resizeactive, -20 0
 binde = SUPER, L, resizeactive, 20 0
 
+bind = SUPER SHIFT, S, exec, ${pkgs.slurp}/bin/slurp -d | ${pkgs.grim}/bin/grim -g - - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.wl-clipboard}/bin/wl-copy
 bind = SUPER, F11, exec, ${swww-change}/bin/swww-change
 
 bind = SUPER SHIFT, Return, exec, ${pkgs.kitty}/bin/kitty
