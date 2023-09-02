@@ -6,4 +6,5 @@
   ./editor/config.nix
   ./bar/config.nix
   ./power/config.nix
+  ./gaming/config.nix
 ]

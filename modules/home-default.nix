@@ -6,4 +6,5 @@
   ./editor/home.nix
   ./bar/home.nix
   ./power/home.nix
+  ./gaming/home.nix
 ]
