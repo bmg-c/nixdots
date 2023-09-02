@@ -1,6 +1,8 @@
-{ pkgs, host, ...}:
-
 {
+  pkgs,
+  host,
+  ...
+}: {
   # environment.systemPackages = with pkgs; [
   #   waybar
   # ];

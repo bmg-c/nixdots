@@ -1,8 +1,9 @@
 # kitty
-
-{pkgs, host, ...}:
-
 {
+  pkgs,
+  host,
+  ...
+}: {
   programs.kitty = {
     enable = true;
     font = {

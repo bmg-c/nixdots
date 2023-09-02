@@ -1,5 +1,6 @@
 # kitty
-
-{ pkgs, host, ...}:
-
-{}
+{
+  pkgs,
+  host,
+  ...
+}: {}

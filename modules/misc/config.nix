@@ -1,9 +1,10 @@
 # QWERTY shortcuts for dvorak layout, kwallet, kde polkit agent, pfetch with
 # kitties, gtk theming (dconf), greetd (tuigreet)
-
-{ pkgs, host, ... }:
-
-let
+{
+  pkgs,
+  host,
+  ...
+}: let
   dvorak = {
     package = pkgs.stdenv.mkDerivation rec {
       name = "dvorak";
@@ -21,33 +22,33 @@ let
     service = {
       enable = true;
       description = "Dvorak Virtual Keyboard";
-      serviceConfig.ExecStart = if host.name == "zeus" then ''${dvorak.package}/bin/dvorak -d /dev/input/by-path/platform-i8042-serio-0-event-kbd -m "AT Translated Set 2 keyboard"'' else '''';
-      wantedBy = [ "default.target" ];
+      serviceConfig.ExecStart =
+        if host.name == "zeus"
+        then ''${dvorak.package}/bin/dvorak -d /dev/input/by-path/platform-i8042-serio-0-event-kbd -m "AT Translated Set 2 keyboard"''
+        else '''';
+      wantedBy = ["default.target"];
     };
   };
-
 
   kwallet = {
     package = pkgs.libsForQt5.kwallet;
-    service = {  
+    service = {
       enable = true;
       description = "KDE Wallet Service";
       serviceConfig.ExecStart = ''${pkgs.libsForQt5.kwallet}/bin/kwalletd5'';
-      wantedBy = [ "default.target" ];
+      wantedBy = ["default.target"];
     };
   };
-
 
   polkitkde = {
     package = pkgs.libsForQt5.kwallet;
-    service = {  
+    service = {
       enable = true;
       description = "KDE Polkit Agent";
       serviceConfig.ExecStart = ''${pkgs.libsForQt5.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1'';
-      wantedBy = [ "default.target" ];
+      wantedBy = ["default.target"];
     };
   };
-
 
   pfetch = {
     package = pkgs.stdenv.mkDerivation rec {
@@ -64,16 +65,12 @@ let
       '';
     };
   };
-
-
 in {
   systemd.services.dvorak = dvorak.service;
   systemd.user.services.kwallet = kwallet.service;
   systemd.user.services.polkitkde = polkitkde.service;
 
-  
   programs.dconf.enable = true;
-
 
   services.xserver.displayManager.lightdm.enable = false;
   services.greetd = {
@@ -89,7 +86,6 @@ in {
     auth include login
   '';
 
-
   environment.systemPackages = [
     dvorak.package
     kwallet.package
@@ -97,9 +93,8 @@ in {
     pfetch.package
   ];
 
-
   boot = {
-    kernelParams = [ "quiet" "splash" "plymouth.nolog" ];
+    kernelParams = ["quiet" "splash" "plymouth.nolog"];
     plymouth = {
       enable = true;
     };

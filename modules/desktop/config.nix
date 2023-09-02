@@ -1,11 +1,11 @@
 # Hyprland
-
-{ pkgs, host, ...}:
-
 {
+  pkgs,
+  ...
+}: {
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+    extraPortals = [pkgs.xdg-desktop-portal-hyprland];
   };
   environment.systemPackages = with pkgs; [
     bemenu

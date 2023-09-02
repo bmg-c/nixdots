@@ -1,8 +1,9 @@
 # fish
-
-{ pkgs, host, ... }:
-
 {
+  pkgs,
+  host,
+  ...
+}: {
   programs.fish.enable = true;
   users = {
     defaultUserShell = pkgs.fish;

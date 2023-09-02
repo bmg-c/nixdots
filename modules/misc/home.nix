@@ -1,8 +1,9 @@
 # htop, gtk theme, mpv
-
-{ pkgs, host, ... }:
-
 {
+  pkgs,
+  host,
+  ...
+}: {
   # programs.htop = {
   #   enable = true;
   #   settings = {
@@ -17,13 +18,12 @@
     enable = true;
   };
 
-
   gtk = {
     enable = true;
     theme = {
       name = "Catppuccin-Mocha-Standard-Pink-dark";
       package = pkgs.catppuccin-gtk.override {
-        accents = [ "pink" ];
+        accents = ["pink"];
         size = "standard";
         tweaks = [];
         variant = "mocha";
@@ -33,15 +33,13 @@
       name = "Paper";
       package = pkgs.paper-icon-theme;
     };
-  };  
+  };
   qt = {
     enable = true;
     platformTheme = "gtk";
   };
 
-
   programs.mpv.enable = true;
-
 
   programs.wlogout = {
     enable = true;
@@ -84,56 +82,55 @@
       }
     ];
     style = ''
-* {
-	background-image: none;
-}
-window {
-	background-color: rgba(12, 12, 12, 0.9);
-}
-button {
-    color: #FFFFFF;
-	background-color: #1E1E2E;
-	border-style: solid;
-	border-width: 2px;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: 25%;
-}
+      * {
+      	background-image: none;
+      }
+      window {
+      	background-color: rgba(12, 12, 12, 0.9);
+      }
+      button {
+          color: #FFFFFF;
+      	background-color: #1E1E2E;
+      	border-style: solid;
+      	border-width: 2px;
+      	background-repeat: no-repeat;
+      	background-position: center;
+      	background-size: 25%;
+      }
 
-button:focus, button:active, button:hover {
-	background-color: #764368;
-	outline-style: none;
-}
+      button:focus, button:active, button:hover {
+      	background-color: #764368;
+      	outline-style: none;
+      }
 
-#lock {
-    background-image: image(url("/home/${host.user}/.config/wlogout/icons/lock.png"));
-}
+      #lock {
+          background-image: image(url("/home/${host.user}/.config/wlogout/icons/lock.png"));
+      }
 
-#logout {
-    background-image: image(url("/home/${host.user}/.config/wlogout/icons/logout.png"));
-}
+      #logout {
+          background-image: image(url("/home/${host.user}/.config/wlogout/icons/logout.png"));
+      }
 
-#suspend {
-    background-image: image(url("/home/${host.user}/.config/wlogout/icons/suspend.png"));
-}
+      #suspend {
+          background-image: image(url("/home/${host.user}/.config/wlogout/icons/suspend.png"));
+      }
 
-#hibernate {
-    background-image: image(url("/home/${host.user}/.config/wlogout/icons/hibernate.png"));
-}
+      #hibernate {
+          background-image: image(url("/home/${host.user}/.config/wlogout/icons/hibernate.png"));
+      }
 
-#shutdown {
-    background-image: image(url("/home/${host.user}/.config/wlogout/icons/shutdown.png"));
-}
+      #shutdown {
+          background-image: image(url("/home/${host.user}/.config/wlogout/icons/shutdown.png"));
+      }
 
-#reboot {
-    background-image: image(url("/home/${host.user}/.config/wlogout/icons/reboot.png"));
-}
+      #reboot {
+          background-image: image(url("/home/${host.user}/.config/wlogout/icons/reboot.png"));
+      }
     '';
   };
   home.file.".config/wlogout/icons/" = {
     source = ./icons;
   };
-
 
   # services.mako = {
   #   enable = true;
