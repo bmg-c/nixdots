@@ -25,7 +25,7 @@
       serviceConfig.ExecStart =
         if host.name == "zeus"
         then ''${dvorak.package}/bin/dvorak -d /dev/input/by-path/platform-i8042-serio-0-event-kbd -m "AT Translated Set 2 keyboard"''
-        else '''';
+        else ''${dvorak.package}/bin/dvorak -d /dev/input/by-id/usb-Logitech_USB_Keyboard-event-kbd -m "Logitech USB Keyboard"'';
       wantedBy = ["default.target"];
     };
   };

@@ -89,6 +89,14 @@
     if host.name == "zeus"
     then ''exec-once = ${pkgs.brightnessctl}/bin/brightnessctl set 180''
     else '''';
+  windowRules =
+    if host.name == "zeus"
+    then ''''
+    else ''
+      windowrule = workspace 8 silent, title:^(Steam)$
+      windowrule = workspace 8 silent, ^(zenity)$
+      windowrule = workspace 8 silent, ^(steam)$
+    '';
 
   gestures =
     if host.name == "zeus"
@@ -178,6 +186,7 @@ in {
       windowrule = workspace 4 silent, ^(YouTube Music)$
       windowrule = float, ^(pavucontrol)$
       windowrule = float, ^(brave)$
+      ${windowRules}
 
 
       general {
