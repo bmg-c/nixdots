@@ -11,7 +11,7 @@
       src = pkgs.fetchFromGitHub {
         owner = "bmg-c";
         repo = "dvorak";
-        rev = "master";
+        rev = "ff9bd9cd095292faed12c35c92266bb3db59c526";
         sha256 = "fieNcEviTGagXO+ivizamlSwo5NCndpJuNPBwBbbD2M=";
       };
       installPhase = ''
