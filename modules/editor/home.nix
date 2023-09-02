@@ -20,6 +20,10 @@
       plenary-nvim
       noice-nvim
       formatter-nvim
+      nvim-autopairs
+      indent-blankline-nvim
+      trouble-nvim
+      harpoon
     ];
     extraPackages = with pkgs; [
       # Language Servers
