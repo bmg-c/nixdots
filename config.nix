@@ -144,7 +144,9 @@ in {
     wl-clipboard
     xdg-utils
     tldr
-    npm
+    nodejs
+    unzip
+    gcc
   ] ++ extraPackages;
 
 
