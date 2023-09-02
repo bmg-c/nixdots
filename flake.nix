@@ -52,6 +52,34 @@
           }
         ];
       };
+      hades = lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          host = {
+            name = "hades";
+            user = "ivan";
+          };
+        };
+        modules = [
+          ./config.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = {
+              host = {
+                name = "hades";
+                user = "ivan";
+              };
+            };
+            home-manager.users.ivan = {
+              imports = [
+                ./home.nix
+              ];
+            };
+          }
+        ];
+      };
     };
   };
 }
