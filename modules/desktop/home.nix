@@ -80,7 +80,7 @@
   isNvidiaCard =
     if host.name == "zeus"
     then false
-    else true;
+    else false;
   execOnceCpupowerGui =
     if host.name == "zeus"
     then ''exec-once = ${pkgs.cpupower-gui}/bin/cpupower-gui ene --pref power''
@@ -92,11 +92,7 @@
   windowRules =
     if host.name == "zeus"
     then ''''
-    else ''
-      windowrule = workspace 8 silent, title:^(Steam)$
-      windowrule = workspace 8 silent, ^(zenity)$
-      windowrule = workspace 8 silent, ^(steam)$
-    '';
+    else '''';
 
   gestures =
     if host.name == "zeus"

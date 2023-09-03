@@ -3,6 +3,14 @@
   host,
   ...
 }: let
+  # nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
+  #   export __NV_PRIME_RENDER_OFFLOAD=1
+  #   export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+  #   export __GLX_VENDOR_LIBRARY_NAME=nvidia
+  #   export __VK_LAYER_NV_optimus=NVIDIA_only
+  #
+  #   exec "$@"
+  # '';
   fileImports =
     if host.name == "zeus"
     then [./hwconf/hwconf-zeus.nix] ++ (import ./modules/config-default.nix)
@@ -19,16 +27,28 @@
     if host.name == "zeus"
     then {}
     else {
-      modesetting.enable = true;
-      open = false;
+      # modesetting.enable = false;
+      # open = false;
+      # prime = {
+      #   offload.enable = true; # Enable PRIME offloading
+      #   intelBusId = "PCI:0:2:0"; # lspci | grep VGA | grep Intel
+      #   nvidiaBusId = "PCI:1:0:0"; # lspci | grep VGA | grep NVIDIA
+      # };
     };
   servicesXserverVideoDrivers =
     if host.name == "zeus"
     then ["amdgpu"]
-    else ["nvidia"];
+    # else ["nvidia"];
+    # else ["modesetting" "nvidia"];
+    else ["modesetting"];
   bootInitrdKernelModules =
     if host.name == "zeus"
     then ["amdgpu"]
+    else [];
+  # else ["i915"];
+  bootKernelParams =
+    if host.name == "zeus"
+    then []
     else [];
 
   environmentVariables =
@@ -45,10 +65,10 @@
       EDITOR = "nvim";
       VISUAL = "nvim";
       XCURSOR_SIZE = "24";
-      LIBVA_DRIVER_NAME = "nvidia";
+      # LIBVA_DRIVER_NAME = "nvidia";
       XDG_SESSION_TYPE = "wayland";
-      GBM_BACKEND = "nvidia-drm";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      # GBM_BACKEND = "nvidia-drm";
+      # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       WLR_NO_HARDWARE_CURSORS = "1";
       NIXOS_OZONE_WL = "1";
     };
@@ -62,6 +82,7 @@
       ]
     else
       with pkgs; [
+        # nvidia-offload
       ];
 in {
   imports = fileImports;
@@ -79,6 +100,7 @@ in {
   };
 
   boot = {
+    kernelParams = bootKernelParams;
     kernelPackages = pkgs.linuxPackages_zen;
     initrd.kernelModules = bootInitrdKernelModules;
     loader = {
@@ -159,6 +181,7 @@ in {
       nodejs
       unzip
       gcc
+      # glxinfo
     ]
     ++ extraPackages;
 
