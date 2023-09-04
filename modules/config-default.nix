@@ -7,4 +7,5 @@
   ./bar/config.nix
   ./power/config.nix
   ./gaming/config.nix
+  ./programming/config.nix
 ]

@@ -32,11 +32,13 @@
       nodePackages.bash-language-server
       nodePackages.pyright
       nil
+      java-language-server
       # Formatters
       stylua
       yapf
       shfmt
       alejandra
+      # google-java-format
     ];
     extraLuaConfig = builtins.readFile ./init.lua;
   };

@@ -182,6 +182,7 @@ in {
       unzip
       gcc
       # glxinfo
+      libreoffice-still
     ]
     ++ extraPackages;
 

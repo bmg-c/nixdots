@@ -7,4 +7,5 @@
   ./bar/home.nix
   ./power/home.nix
   ./gaming/home.nix
+  ./programming/home.nix
 ]
