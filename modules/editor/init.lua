@@ -27,7 +27,7 @@ end
 -- Base --
 ----------
 
-map("n", "<leader>j", ":nohlsearch<CR>") -- Clear search
+vim.keymap.set("n", "<leader>j", ":nohlsearch<CR>", { silent = true }) -- Clear search
 
 -- Do not copy to clipboard on 'x' press --
 -- map("n", "x", '"_x')
@@ -49,8 +49,8 @@ map("v", "<leader>p", '"+P')
 -- Plugins Keybindings --
 -------------------------
 
-map("n", "<C-n>", ":NvimTreeFindFileToggle<CR>") -- nvim-tree
-map("n", "<leader>f", ":Format<CR>") -- formatter.nvim
+vim.keymap.set("n", "<C-n>", ":NvimTreeFindFileToggle<CR>", { silent = true }) -- nvim-tree
+vim.keymap.set("n", "<leader>f", ":Format<CR>", { silent = true }) -- formatter.nvim
 
 -- trouble --
 vim.keymap.set("n", "<leader>xx", function()
@@ -208,14 +208,41 @@ require("lspconfig").nil_ls.setup({
 	on_attach = on_attach,
 	capabilities = capabilities,
 })
--- require("lspconfig").java_language_server.setup({
--- 	on_attach = on_attach,
--- 	capabilities = capabilities,
--- 	-- cmd = { "java-language-server" },
--- 	cmd = {
--- 		"/nix/store/aqbxq6hplhg1ip1b8hiqfca3mg5ny54x-java-language-server-0.2.38/share/java/java-language-server/lang_server_linux.sh",
--- 	},
--- })
+
+local home = os.getenv("HOME")
+local jdtls = require("jdtls")
+local root_markers = { "gradlew", "mvnw", ".git" }
+local root_dir = require("jdtls.setup").find_root(root_markers)
+local workspace_folder = home .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
+local config = {
+	flags = {
+		debounce_text_changes = 80,
+	},
+	on_attach = on_attach,
+	root_dir = root_dir,
+	settings = {
+		java = {
+			format = {
+				settings = {
+					-- Use Google Java style guidelines for formatting
+					-- To use, make sure to download the file from https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
+					-- and place it in the ~/.local/share/eclipse directory
+					url = "/.local/share/eclipse/eclipse-java-google-style.xml",
+					profile = "GoogleStyle",
+				},
+			},
+			signatureHelp = { enabled = true },
+			contentProvider = { preferred = "fernflower" }, -- Use fernflower to decompile library code
+			-- Specify any completion options
+		},
+	},
+	cmd = {
+		"jdt-language-server",
+		"-data",
+		workspace_folder,
+	},
+}
+jdtls.start_or_attach(config)
 
 local util = require("formatter.util")
 require("formatter").setup({
@@ -272,6 +299,63 @@ require("formatter").setup({
 	},
 })
 
+-------------------------------------------------------------------------------
+---------- Coc
+-- vim.opt.backup = false
+-- vim.opt.writebackup = false
+-- vim.opt.signcolumn = "yes"
+--
+-- -- vim.opt.updatetime = 300 -- Still to test
+--
+-- --- Keymaps
+--
+-- local keyset = vim.keymap.set
+-- -- Autocomplete
+-- function _G.check_back_space()
+--     local col = vim.fn.col('.') - 1
+--     return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
+-- end
+--
+-- local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
+-- keyset("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
+-- keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
+-- keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
+--
+-- -- Use <c-j> to trigger snippets
+-- keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
+-- -- Use <c-space> to trigger completion
+-- keyset("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
+--
+-- -- Use `[g` and `]g` to navigate diagnostics
+-- -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
+-- keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
+-- keyset("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
+-- -- GoTo code navigation
+-- keyset("n", "gd", "<Plug>(coc-definition)", {silent = true})
+-- keyset("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
+-- keyset("n", "gi", "<Plug>(coc-implementation)", {silent = true})
+-- keyset("n", "gr", "<Plug>(coc-references)", {silent = true})
+-- -- Use K to show documentation in preview window
+-- function _G.show_docs()
+--     local cw = vim.fn.expand('<cword>')
+--     if vim.fn.index({'vim', 'help'}, vim.bo.filetype) >= 0 then
+--         vim.api.nvim_command('h ' .. cw)
+--     elseif vim.api.nvim_eval('coc#rpc#ready()') then
+--         vim.fn.CocActionAsync('doHover')
+--     else
+--         vim.api.nvim_command('!' .. vim.o.keywordprg .. ' ' .. cw)
+--     end
+-- end
+-- keyset("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
+--
+-- -- Symbol renaming
+-- keyset("n", "<leader>rn", "<Plug>(coc-rename)", {silent = true})
+--
+-- -- Formatting selected code
+-- -- keyset("x", "<leader>f", "<Plug>(coc-format)", {silent = true})
+-- keyset("n", "<leader>f", "<Plug>(coc-format)", {silent = true})
+-------------------------------------------------------------------------------
+--
 vim.cmd(
 	[[set langmap='q,\\,w,.e,pr,yt,fy,gu,ci,ro,lp,/[,=],aa,os,ed,uf,ig,dh,hj,tk,nl,s\\;,-',\\;z,qx,jc,kv,xb,bn,mm,w\\,,v.,z/,[-,]=,\"Q,<W,>E,PR,YT,FY,GU,CI,RO,LP,?{,+},AA,OS,ED,UF,IG,DH,HJ,TK,NL,S:,_\",:Z,QX,JC,KV,XB,BN,MM,W<,V>,Z?]]
 )
