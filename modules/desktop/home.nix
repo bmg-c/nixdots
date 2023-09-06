@@ -81,13 +81,11 @@
     if host.name == "zeus"
     then false
     else false;
-  execOnceCpupowerGui =
+  execOnce =
     if host.name == "zeus"
-    then ''exec-once = ${pkgs.cpupower-gui}/bin/cpupower-gui ene --pref power''
-    else '''';
-  execOnceBrightnessctl =
-    if host.name == "zeus"
-    then ''exec-once = ${pkgs.brightnessctl}/bin/brightnessctl set 180''
+    then ''
+    exec-once = ${pkgs.cpupower-gui}/bin/cpupower-gui ene --pref power
+    exec-once = ${pkgs.brightnessctl}/bin/brightnessctl set 180''
     else '''';
   windowRules =
     if host.name == "zeus"
@@ -140,7 +138,7 @@
       }
     '';
 
-  bindBrightness =
+  binds =
     if host.name == "zeus"
     then ''
       binde = SUPER, F5, exec, brightnessctl set 15-
@@ -173,9 +171,8 @@ in {
       exec-once = ${pkgs.systemd}/bin/systemctl --user start polkitkde.service
       exec-once = ${pkgs.systemd}/bin/systemctl --user start kwallet.service
       exec-once = ${pkgs.swww}/bin/swww-daemon
-      exec-once = sleep 0.2 && ${swww-change}/bin/swww-change
-      ${execOnceCpupowerGui}
-      ${execOnceBrightnessctl}
+      exec-once = sleep 0.5 && ${swww-change}/bin/swww-change
+      ${execOnce}
 
       windowrule = workspace 2 silent, ^(brave-browser)$
       windowrule = workspace 5 silent, ^(org.telegram.desktop)$
@@ -246,10 +243,10 @@ in {
 
       bind = SUPER SHIFT, S, exec, ${pkgs.slurp}/bin/slurp -d | ${pkgs.grim}/bin/grim -g - - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.wl-clipboard}/bin/wl-copy
       bind = SUPER, F12, exec, ${swww-change}/bin/swww-change
-      bind = SUPER, down, exec, ${pkgs.alsa-utils}/bin/amixer sset Master 5%-
-      bind = SUPER, up, exec, ${pkgs.alsa-utils}/bin/amixer sset Master 5%+
-      bind = SUPER, M, exec, ${pkgs.alsa-utils}/bin/amixer sset Master toggle
-      ${bindBrightness}
+      binde = SUPER, down, exec, ${pkgs.alsa-utils}/bin/amixer sset Master 5%-
+      binde = SUPER, up, exec, ${pkgs.alsa-utils}/bin/amixer sset Master 5%+
+      binde = SUPER, M, exec, ${pkgs.alsa-utils}/bin/amixer sset Master toggle
+      ${binds}
       bind = SUPER, F10, exec, ${kb-variant-toggle}/bin/kb-variant-toggle
 
       bind = SUPER SHIFT, Return, exec, ${pkgs.kitty}/bin/kitty
