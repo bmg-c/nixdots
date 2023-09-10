@@ -65,9 +65,13 @@ in {
       }
       {
         name = "rust";
+        auto-format = true;
         formatter = {
             command = "rustfmt";
-            args = ["--edition 2021" "-"];
+            # args = ["--edition 2021" "-"];
+        };
+        config = {
+          diagnostics.experimental.enable = true;
         };
       }
     ];
@@ -76,6 +80,7 @@ in {
     jdtls
 
     rust-analyzer
+    rustfmt
 
     clang-tools
 
