@@ -50,7 +50,7 @@ in {
           display-inlay-hints = true;
         };
       };
-      keys.normal = import ./helix/keybindings/normal.nix;
+      keys.normal = import ./helix/keybindings/test.nix;
       keys.insert = import ./helix/keybindings/insert.nix;
       keys.select = import ./helix/keybindings/select.nix;
     };

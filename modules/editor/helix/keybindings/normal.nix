@@ -83,7 +83,7 @@
   right = "move_char_right";
   "," = "move_next_word_start";
   x = "move_prev_word_start";
-  "." = "move_next_word_end";
+  # "." = "move_next_long_word_end";
   "<" = "move_next_long_word_start";
   X = "move_prev_long_word_start";
   ">" = "move_next_long_word_end";
