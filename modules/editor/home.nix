@@ -50,7 +50,7 @@ in {
           display-inlay-hints = true;
         };
       };
-      keys.normal = import ./helix/keybindings/test.nix;
+      keys.normal = import ./helix/keybindings/normal.nix;
       keys.insert = import ./helix/keybindings/insert.nix;
       keys.select = import ./helix/keybindings/select.nix;
     };
@@ -67,11 +67,26 @@ in {
         name = "rust";
         auto-format = true;
         formatter = {
-            command = "rustfmt";
-            # args = ["--edition 2021" "-"];
+          command = "rustfmt";
         };
         config = {
           diagnostics.experimental.enable = true;
+        };
+      }
+      {
+        name = "c";
+        auto-format = true;
+        formatter = {
+          command = "clang-format";
+          args = ["-"];
+        };
+      }
+      {
+        name = "nix";
+        auto-format = true;
+        formatter = {
+          command = "alejandra";
+          args = ["--quiet" "-"];
         };
       }
     ];
@@ -81,6 +96,7 @@ in {
 
     rust-analyzer
     rustfmt
+    lldb
 
     clang-tools
 
@@ -89,6 +105,8 @@ in {
 
     nil
     alejandra
+
+    nodePackages_latest.bash-language-server
   ];
   programs.neovim = {
     enable = true;

@@ -25,7 +25,7 @@
   # t = "no_op";
   # n = "no_op";
   # s = "no_op";
-  minus = "no_op";
+  # minus = "no_op";
   # ";" = "no_op";
   # q = "no_op";
   # j = "no_op";
@@ -72,6 +72,12 @@
   # V = "no_op";
   # Z = "no_op";
 
+  # Custom
+  "." = "no_op";
+  minus = "file_picker_in_current_buffer_directory";
+  "\"" = "move_next_long_word_end";
+  "'" = "move_next_word_end";
+
   # # Movement
   d = "move_char_left";
   h = "move_visual_line_down";
@@ -83,7 +89,9 @@
   right = "move_char_right";
   "," = "move_next_word_start";
   x = "move_prev_word_start";
-  # "." = "move_next_long_word_end";
+  # "." = "move_next_word_end";
+  # "\"" = "record_macro";
+  # "'" = "replay_macro";
   "<" = "move_next_long_word_start";
   X = "move_prev_long_word_start";
   ">" = "move_next_long_word_end";
@@ -150,8 +158,6 @@
   C-a = "increment";
   C-q = "no_op";
   C-x = "decrement";
-  "\"" = "no_op"; # "record_macro"
-  "'" = "no_op"; # "replay_macro"
 
   # Shell
   "|" = "shell_pipe";
