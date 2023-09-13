@@ -46,9 +46,10 @@ in {
         line-number = "relative";
         indent-guides.render = true;
         lsp = {
-          display-messages = true;
-          display-inlay-hints = true;
+          # display-messages = true;
+          # display-inlay-hints = true;
         };
+        rulers = [81];
       };
       keys.normal = import ./helix/keybindings/normal.nix;
       keys.insert = import ./helix/keybindings/insert.nix;
@@ -100,6 +101,13 @@ in {
         };
         # language-server = { command = "gradle-language-server"}
       }
+      {
+        name = "java";
+        formatter = {
+          command = "clang-format";
+          args = ["-"];
+        };
+      }
     ];
   };
   home.packages = with pkgs; [
@@ -119,61 +127,62 @@ in {
 
     nodePackages_latest.bash-language-server
   ];
-  programs.neovim = {
-    enable = true;
-    withNodeJs = true;
-    plugins = with pkgs.vimPlugins; [
-      catppuccin-nvim
-      lualine-nvim
-      nvim-web-devicons
-      nvim-tree-lua
-      nvim-treesitter.withAllGrammars
-      comment-nvim
-      nvim-lspconfig
-      nvim-cmp
-      luasnip
-      cmp_luasnip
-      friendly-snippets
-      cmp-nvim-lsp
-      telescope-nvim
-      plenary-nvim
-      formatter-nvim
-      nvim-autopairs
-      indent-blankline-nvim
-      trouble-nvim
-      harpoon
-      nvim-jdtls
-      # # # coc
-      # coc-java
-      # coc-sumneko-lua
-      # coc-json
-      # coc-python
-    ];
-    extraPackages = with pkgs; [
-      # # Language Servers
-      lua-language-server
-      clang-tools # Also a formatter
-      nodePackages.bash-language-server
-      nodePackages.pyright
-      nil
-      jdt-language-server
-      # # Formatters
-      stylua
-      yapf
-      shfmt
-      alejandra
-      # google-java-format
-    ];
-    # coc = {
-    #   enable = true;
-    #   settings = {
-    #     # "coc.preferences.snippets.enable" = true;
-    #     "coc.preferences.extensionUpdateCheck" = "never";
-    #     "sumneko-lua.serverDir" = "${pkgs.lua-language-server}/bin/lua-language-server";
-    #   };
-    #
-    #
-    # };
-    extraLuaConfig = builtins.readFile ./init.lua;
-  };
+  # programs.neovim = {
+  #   enable = true;
+  #   package = pkgs.neovim;
+  #   withNodeJs = true;
+  #   plugins = with pkgs.vimPlugins; [
+  #     catppuccin-nvim
+  #     lualine-nvim
+  #     nvim-web-devicons
+  #     nvim-tree-lua
+  #     nvim-treesitter.withAllGrammars
+  #     comment-nvim
+  #     nvim-lspconfig
+  #     nvim-cmp
+  #     luasnip
+  #     cmp_luasnip
+  #     friendly-snippets
+  #     cmp-nvim-lsp
+  #     telescope-nvim
+  #     plenary-nvim
+  #     formatter-nvim
+  #     nvim-autopairs
+  #     indent-blankline-nvim
+  #     trouble-nvim
+  #     harpoon
+  #     nvim-jdtls
+  #     # # # coc
+  #     # coc-java
+  #     # coc-sumneko-lua
+  #     # coc-json
+  #     # coc-python
+  #   ];
+  #   extraPackages = with pkgs; [
+  #     # # Language Servers
+  #     lua-language-server
+  #     clang-tools # Also a formatter
+  #     nodePackages.bash-language-server
+  #     nodePackages.pyright
+  #     nil
+  #     jdt-language-server
+  #     # # Formatters
+  #     stylua
+  #     yapf
+  #     shfmt
+  #     alejandra
+  #     # google-java-format
+  #   ];
+  #   # coc = {
+  #   #   enable = true;
+  #   #   settings = {
+  #   #     # "coc.preferences.snippets.enable" = true;
+  #   #     "coc.preferences.extensionUpdateCheck" = "never";
+  #   #     "sumneko-lua.serverDir" = "${pkgs.lua-language-server}/bin/lua-language-server";
+  #   #   };
+  #   #
+  #   #
+  #   # };
+  #   extraLuaConfig = builtins.readFile ./init.lua;
+  # };
 }
