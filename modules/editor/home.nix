@@ -89,6 +89,17 @@ in {
           args = ["--quiet" "-"];
         };
       }
+      {
+        name = "gradle";
+        scope = "source.gradle";
+        roots = [];
+        file-types = ["gradle"];
+        indent = {
+          tab-width = 4;
+          unit = " ";
+        };
+        # language-server = { command = "gradle-language-server"}
+      }
     ];
   };
   home.packages = with pkgs; [

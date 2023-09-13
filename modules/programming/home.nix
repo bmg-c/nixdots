@@ -11,5 +11,7 @@
   home.packages = with pkgs; [
     rustc
     cargo
+
+    gradle
   ];
 }
