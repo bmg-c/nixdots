@@ -49,6 +49,7 @@ in {
           # display-messages = true;
           # display-inlay-hints = true;
         };
+        idle-timeout = 100;
         rulers = [81];
       };
       keys.normal = import ./helix/keybindings/normal.nix;
@@ -127,6 +128,7 @@ in {
 
     nodePackages_latest.bash-language-server
   ];
+  programs.nixvim = import ./nvim;
   # programs.neovim = {
   #   enable = true;
   #   package = pkgs.neovim;

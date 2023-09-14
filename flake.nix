@@ -8,12 +8,18 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      # url = "/home/gaetan/perso/nix/nixvim/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
+    nixvim,
     ...
   }: let
     system = "x86_64-linux";
@@ -22,6 +28,9 @@
       config.allowUnfree = true;
     };
     lib = nixpkgs.lib;
+    homeManagerModules = [
+      nixvim.homeManagerModules.nixvim
+    ];
   in {
     nixosConfigurations = {
       zeus = lib.nixosSystem {
@@ -45,9 +54,11 @@
               };
             };
             home-manager.users.ivan = {
-              imports = [
-                ./home.nix
-              ];
+              imports =
+                [
+                  ./home.nix
+                ]
+                ++ homeManagerModules;
             };
           }
         ];
