@@ -66,7 +66,6 @@
       VISUAL = "nvim";
       XCURSOR_SIZE = "24";
       # LIBVA_DRIVER_NAME = "nvidia";
-      XDG_SESSION_TYPE = "wayland";
       # GBM_BACKEND = "nvidia-drm";
       # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       WLR_NO_HARDWARE_CURSORS = "1";
@@ -137,12 +136,13 @@ in {
     nvidia = hardwareNvidia;
   };
   services.xserver = {
-    enable = false;
+    enable = true;
     libinput.enable = true;
     videoDrivers = servicesXserverVideoDrivers;
   };
 
   sound.enable = false;
+  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

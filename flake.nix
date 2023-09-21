@@ -10,7 +10,6 @@
     };
     nixvim = {
       url = "github:nix-community/nixvim";
-      # url = "/home/gaetan/perso/nix/nixvim/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -39,6 +38,11 @@
           host = {
             name = "zeus";
             user = "ivan";
+            shell = "fish";
+            bar = "waybar";
+            desktop = "hyprland";
+            polkitkde = true;
+            kwallet = true;
           };
         };
         modules = [
@@ -51,6 +55,11 @@
               host = {
                 name = "zeus";
                 user = "ivan";
+                shell = "fish";
+                bar = "waybar";
+                desktop = "hyprland";
+                polkitkde = true;
+                kwallet = true;
               };
             };
             home-manager.users.ivan = {
@@ -69,6 +78,11 @@
           host = {
             name = "hades";
             user = "ivan";
+            shell = "fish";
+            bar = "waybar";
+            desktop = "hyprland";
+            polkitkde = true;
+            kwallet = true;
           };
         };
         modules = [
@@ -81,6 +95,11 @@
               host = {
                 name = "hades";
                 user = "ivan";
+                shell = "fish";
+                bar = "waybar";
+                desktop = "hyprland";
+                polkitkde = true;
+                kwallet = true;
               };
             };
             home-manager.users.ivan = {
